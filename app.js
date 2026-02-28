@@ -433,7 +433,10 @@ function animate() {
     if (inAR && !wasInAR) {
         scene.background = null;
         if (gridHelper) gridHelper.visible = false;
-        if (sceneContentGroup) sceneContentGroup.position.set(0, 0, -1.5);
+        if (sceneContentGroup) {
+            sceneContentGroup.position.set(0, 0.9, -1.2);  // Devant toi, à hauteur de poitrine
+            sceneContentGroup.scale.setScalar(2.5);        // Plus grand pour être bien visible
+        }
         if (poseDetector?.isActive()) {
             poseDetector.stop();
             document.getElementById('poseToggle').textContent = 'Activer la caméra';
@@ -441,7 +444,10 @@ function animate() {
     } else if (!inAR && wasInAR) {
         scene.background = new THREE.Color(0x0f1419);
         if (gridHelper) gridHelper.visible = true;
-        if (sceneContentGroup) sceneContentGroup.position.set(0, 0, 0);
+        if (sceneContentGroup) {
+            sceneContentGroup.position.set(0, 0, 0);
+            sceneContentGroup.scale.setScalar(1);
+        }
     }
     wasInAR = inAR;
 
