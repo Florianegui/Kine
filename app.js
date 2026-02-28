@@ -351,6 +351,7 @@ function applyKeyframe(skeleton, data, pose) {
 // ============ Initialisation Three.js ============
 let gridHelper = null;
 let sceneContentGroup = null;  // Groupe pour déplacer le modèle devant l'utilisateur en AR
+let arMarker = null;  // Objet de test visible en AR
 
 function initThree() {
     const container = document.getElementById('canvas-container');
@@ -434,9 +435,19 @@ function animate() {
         scene.background = null;
         if (gridHelper) gridHelper.visible = false;
         if (sceneContentGroup) {
-            sceneContentGroup.position.set(0, 0.9, -1.2);  // Devant toi, à hauteur de poitrine
-            sceneContentGroup.scale.setScalar(2.5);        // Plus grand pour être bien visible
+            sceneContentGroup.position.set(0, 0.5, -0.8);   // Très proche, devant toi
+            sceneContentGroup.scale.setScalar(8);            // Beaucoup plus grand
         }
+        if (!arMarker) {
+            arMarker = new THREE.Mesh(
+                new THREE.SphereGeometry(0.15, 16, 16),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            arMarker.position.set(0, 0.5, -0.8);
+            arMarker.name = 'arMarker';
+            scene.add(arMarker);
+        }
+        arMarker.visible = true;
         if (poseDetector?.isActive()) {
             poseDetector.stop();
             document.getElementById('poseToggle').textContent = 'Activer la caméra';
@@ -448,6 +459,7 @@ function animate() {
             sceneContentGroup.position.set(0, 0, 0);
             sceneContentGroup.scale.setScalar(1);
         }
+        if (arMarker) arMarker.visible = false;
     }
     wasInAR = inAR;
 
