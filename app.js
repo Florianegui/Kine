@@ -836,31 +836,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Premier exercice sélectionné
-    selectExercise('etirement-dos');
+    selectExercise(exercises[0]?.id || 'biceps-curl');
 
-    // Sidebar mobile (toggle)
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const sidebarClose = document.getElementById('sidebarClose');
-
-    function openSidebar() {
-        sidebar?.classList.add('open');
-        sidebarOverlay?.classList.add('visible');
-        document.body.style.overflow = 'hidden';
+    // Menu bibliothèque (ouvrir/fermer)
+    const menuToggle = document.getElementById('menuToggle');
+    const viewExercices = document.getElementById('viewExercices');
+    if (menuToggle && viewExercices) {
+        menuToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            viewExercices.classList.toggle('menu-closed');
+        });
     }
-
-    function closeSidebar() {
-        sidebar?.classList.remove('open');
-        sidebarOverlay?.classList.remove('visible');
-        document.body.style.overflow = '';
-    }
-
-    sidebarToggle?.addEventListener('click', openSidebar);
-    sidebarClose?.addEventListener('click', closeSidebar);
-    sidebarOverlay?.addEventListener('click', closeSidebar);
-
-    document.getElementById('exerciseList')?.addEventListener('click', (e) => {
-        if (e.target.closest('.exercise-item') && window.innerWidth <= 768) closeSidebar();
-    });
 });

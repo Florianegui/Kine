@@ -2,9 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiné Rééducation - Plateforme IA & 3D</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,13 +28,8 @@
         <main class="main">
             <!-- Vue Exercices -->
             <div class="view-exercices" id="viewExercices">
-            <!-- Sidebar - Liste des exercices -->
-            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Ouvrir les exercices" title="Exercices">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-            </button>
-            <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+            <!-- Sidebar - Liste des exercices (mode menu) -->
             <aside class="sidebar" id="sidebar">
-                <button class="sidebar-close" id="sidebarClose" aria-label="Fermer">×</button>
                 <h2>Bibliothèque d'exercices</h2>
                 <div class="search-box">
                     <input type="text" id="searchExercises" placeholder="Rechercher un exercice...">
@@ -54,6 +47,9 @@
             <section class="viewer-split">
             <div class="viewer-3d">
                 <div class="viewer-header">
+                    <button type="button" class="menu-toggle" id="menuToggle" title="Ouvrir/Fermer la bibliothèque" aria-label="Menu exercices">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
                     <h2 id="exerciseTitle">Sélectionnez un exercice</h2>
                     <div class="viewer-controls">
                         <label class="model-upload">
