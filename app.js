@@ -353,6 +353,18 @@ let gridHelper = null;
 let sceneContentGroup = null;  // Groupe pour déplacer le modèle devant l'utilisateur en AR
 let arMarker = null;  // Objet de test visible en AR
 
+function getARPosition() {
+    const x = parseFloat(document.getElementById('arPosX')?.value ?? 0);
+    const y = parseFloat(document.getElementById('arPosY')?.value ?? 0);
+    const z = parseFloat(document.getElementById('arPosZ')?.value ?? -0.8);
+    return { x, y, z };
+}
+
+function applyARPosition(pos) {
+    if (sceneContentGroup) sceneContentGroup.position.set(pos.x, pos.y, pos.z);
+    if (arMarker) arMarker.position.set(pos.x, pos.y, pos.z);
+}
+
 function initThree() {
     const container = document.getElementById('canvas-container');
     scene = new THREE.Scene();
@@ -434,16 +446,17 @@ function animate() {
     if (inAR && !wasInAR) {
         scene.background = null;
         if (gridHelper) gridHelper.visible = false;
+        const pos = getARPosition();
         if (sceneContentGroup) {
-            sceneContentGroup.position.set(0, 0, -0.8);     // Devant toi, à hauteur des yeux
-            sceneContentGroup.scale.setScalar(8);            // Beaucoup plus grand
+            sceneContentGroup.position.set(pos.x, pos.y, pos.z);
+            sceneContentGroup.scale.setScalar(8);
         }
         if (!arMarker) {
             arMarker = new THREE.Mesh(
                 new THREE.SphereGeometry(0.15, 16, 16),
                 new THREE.MeshBasicMaterial({ color: 0xff0000 })
             );
-            arMarker.position.set(0, 0, -0.8);
+            arMarker.position.set(pos.x, pos.y, pos.z);
             arMarker.name = 'arMarker';
             scene.add(arMarker);
         }
@@ -870,4 +883,21 @@ document.addEventListener('DOMContentLoaded', () => {
             viewExercices.classList.toggle('menu-closed');
         });
     }
+
+    // Position AR : panneau + sliders
+    const arPositionPanel = document.getElementById('arPositionPanel');
+    const arPositionToggle = document.getElementById('arPositionToggle');
+    if (arPositionToggle && arPositionPanel) {
+        arPositionToggle.addEventListener('click', () => {
+            const open = arPositionPanel.classList.toggle('open');
+            arPositionPanel.setAttribute('aria-hidden', !open);
+            arPositionToggle.classList.toggle('active', open);
+        });
+    }
+    ['arPosX', 'arPosY', 'arPosZ'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => {
+            if (renderer?.xr?.isPresenting) applyARPosition(getARPosition());
+        });
+    });
 });
