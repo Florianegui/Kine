@@ -435,7 +435,7 @@ function animate() {
         scene.background = null;
         if (gridHelper) gridHelper.visible = false;
         if (sceneContentGroup) {
-            sceneContentGroup.position.set(0, 0.5, -0.8);   // Très proche, devant toi
+            sceneContentGroup.position.set(0, 0, -0.8);     // Devant toi, à hauteur des yeux
             sceneContentGroup.scale.setScalar(8);            // Beaucoup plus grand
         }
         if (!arMarker) {
@@ -443,7 +443,7 @@ function animate() {
                 new THREE.SphereGeometry(0.15, 16, 16),
                 new THREE.MeshBasicMaterial({ color: 0xff0000 })
             );
-            arMarker.position.set(0, 0.5, -0.8);
+            arMarker.position.set(0, 0, -0.8);
             arMarker.name = 'arMarker';
             scene.add(arMarker);
         }
