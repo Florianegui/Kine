@@ -357,11 +357,16 @@ function getARPosition() {
     const x = parseFloat(document.getElementById('arPosX')?.value ?? 0);
     const y = parseFloat(document.getElementById('arPosY')?.value ?? 0);
     const z = parseFloat(document.getElementById('arPosZ')?.value ?? -0.8);
-    return { x, y, z };
+    const scale = parseFloat(document.getElementById('arScale')?.value ?? 4);
+    return { x, y, z, scale };
 }
 
 function applyARPosition(pos) {
-    if (sceneContentGroup) sceneContentGroup.position.set(pos.x, pos.y, pos.z);
+    if (!renderer?.xr?.isPresenting) return;  // Uniquement en AR
+    if (sceneContentGroup) {
+        sceneContentGroup.position.set(pos.x, pos.y, pos.z);
+        sceneContentGroup.scale.setScalar(pos.scale);
+    }
     if (arMarker) arMarker.position.set(pos.x, pos.y, pos.z);
 }
 
@@ -449,7 +454,7 @@ function animate() {
         const pos = getARPosition();
         if (sceneContentGroup) {
             sceneContentGroup.position.set(pos.x, pos.y, pos.z);
-            sceneContentGroup.scale.setScalar(8);
+            sceneContentGroup.scale.setScalar(pos.scale);
         }
         if (!arMarker) {
             arMarker = new THREE.Mesh(
@@ -894,7 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
             arPositionToggle.classList.toggle('active', open);
         });
     }
-    ['arPosX', 'arPosY', 'arPosZ'].forEach(id => {
+    ['arPosX', 'arPosY', 'arPosZ', 'arScale'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', () => {
             if (renderer?.xr?.isPresenting) applyARPosition(getARPosition());
