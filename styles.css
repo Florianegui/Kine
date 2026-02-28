@@ -36,6 +36,7 @@ body {
     background: var(--bg-primary);
     color: var(--text-primary);
     min-height: 100vh;
+    min-height: 100dvh;
     line-height: 1.6;
     overflow: hidden;
 }
@@ -203,11 +204,28 @@ body {
 }
 
 /* Sidebar */
+.sidebar-close {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+}
+
 .sidebar {
     background: var(--bg-secondary);
     border-right: 1px solid var(--border);
     padding: 1.5rem;
     overflow-y: auto;
+    position: relative;
 }
 
 .sidebar h2 {
@@ -804,5 +822,238 @@ body {
 
     .webcam-panel .pose-viewer {
         min-height: 250px;
+    }
+}
+
+/* ============ Mode téléphone (réversible portrait / paysage) ============ */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 100;
+    padding: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg-primary);
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+    transition: transform 0.2s;
+}
+
+.sidebar-toggle:hover {
+    transform: scale(1.05);
+}
+
+.sidebar-toggle:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+    .sidebar h2 {
+        padding-right: 3rem;
+    }
+
+    .header {
+        padding: 0.75rem 1rem;
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .sidebar-toggle {
+        bottom: max(1rem, env(safe-area-inset-bottom));
+        left: max(1rem, env(safe-area-inset-left));
+    }
+
+    .logo h1 {
+        font-size: 1rem;
+    }
+
+    .badge {
+        font-size: 0.65rem;
+    }
+
+    .nav-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .main,
+    .view-exercices {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        max-width: 320px;
+        height: 100vh;
+        z-index: 200;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: none;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 150;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.visible {
+        display: block;
+        opacity: 1;
+    }
+
+    .sidebar-toggle {
+        display: flex;
+    }
+
+    .viewer-split {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .viewer-3d {
+        flex: 1;
+        min-height: 280px;
+    }
+
+    .viewer-header {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .viewer-header h2 {
+        font-size: 1rem;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .viewer-controls {
+        flex-wrap: wrap;
+    }
+
+    .control-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    #canvas-container {
+        min-height: 240px;
+    }
+
+    .webcam-panel {
+        min-height: 240px;
+        flex-shrink: 0;
+    }
+
+    .webcam-panel .pose-viewer {
+        min-height: 200px;
+    }
+
+    .pose-toggle {
+        min-height: 48px;
+        font-size: 1rem;
+    }
+
+    .exercise-info {
+        padding: 0.75rem 1rem;
+    }
+
+    .footer {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+    }
+
+    .suivi-content {
+        padding: 1rem;
+    }
+}
+
+/* Portrait : 3D + webcam empilés verticalement, 50/50 */
+@media (max-width: 768px) and (orientation: portrait) {
+    .viewer-split {
+        flex-direction: column;
+    }
+
+    .viewer-3d {
+        flex: 1;
+        min-height: 40vh;
+    }
+
+    .webcam-panel {
+        flex: 1;
+        min-height: 35vh;
+    }
+}
+
+/* Paysage : 3D et webcam côte à côte */
+@media (max-width: 768px) and (orientation: landscape) {
+    .viewer-split {
+        flex-direction: row;
+    }
+
+    .viewer-3d {
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+    }
+
+    .webcam-panel {
+        flex: 1;
+        min-width: 0;
+        min-height: 200px;
+    }
+
+    .viewer-header h2 {
+        font-size: 0.9rem;
+    }
+}
+
+/* Très petit écran */
+@media (max-width: 400px) {
+    .header {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .logo h1 {
+        font-size: 0.9rem;
+    }
+
+    .viewer-controls {
+        gap: 0.25rem;
+    }
+
+    .control-btn {
+        width: 40px;
+        height: 40px;
     }
 }
