@@ -408,27 +408,38 @@ body {
     display: block;
 }
 
-/* Bouton AR WebXR */
-#canvas-container #ARButton,
-#canvas-container #arBtn {
-    position: absolute !important;
-    bottom: 1rem !important;
-    right: 1rem !important;
-    left: auto !important;
-    padding: 0.5rem 1rem !important;
-    font-size: 0.85rem !important;
+/* Bouton AR WebXR — dans la barre de contrôles (visible sur mobile) */
+#arButtonContainer {
+    display: flex;
+    align-items: center;
+}
+
+#arButtonContainer #ARButton,
+#arButtonContainer #arBtn {
+    position: static !important;
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    min-height: 40px !important;
     background: var(--bg-tertiary) !important;
     border: 1px solid var(--accent) !important;
     color: var(--accent) !important;
     border-radius: var(--radius-sm) !important;
     cursor: pointer !important;
-    z-index: 10 !important;
     opacity: 1 !important;
 }
 
-#canvas-container #ARButton:hover,
-#canvas-container #arBtn:hover {
+#arButtonContainer #ARButton:hover,
+#arButtonContainer #arBtn:hover {
     background: rgba(6, 182, 212, 0.15) !important;
+}
+
+@media (max-width: 768px) {
+    #arButtonContainer #ARButton,
+    #arButtonContainer #arBtn {
+        padding: 0.35rem 0.6rem !important;
+        font-size: 0.75rem !important;
+        min-height: 44px !important;
+    }
 }
 
 .exercise-info {

@@ -399,11 +399,15 @@ function initThree() {
     sceneContentGroup = new THREE.Group();
     scene.add(sceneContentGroup);
 
-    // Bouton AR (WebXR)
-    const arBtn = ARButton.createButton(renderer);
-    arBtn.id = 'arBtn';
-    arBtn.classList.add('ar-btn');
-    container.appendChild(arBtn);
+    // Bouton AR (WebXR) — dans la barre de contrôles pour être visible sur mobile
+    const arContainer = document.getElementById('arButtonContainer');
+    if (arContainer) {
+        const arBtn = ARButton.createButton(renderer);
+        arBtn.id = 'arBtn';
+        arBtn.classList.add('ar-btn');
+        arBtn.title = 'Mode AR';
+        arContainer.appendChild(arBtn);
+    }
 
     // Squelette par défaut
     skeleton = createSkeleton(modelType);
