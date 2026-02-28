@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiné Rééducation - Plateforme IA & 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">◈</span>
+                <h1>Kiné Rééducation</h1>
+                <span class="badge">IA + 3D</span>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-view="exercices">Exercices</button>
+                <button class="nav-btn" data-view="suivi">Suivi</button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Vue Exercices -->
+            <div class="view-exercices" id="viewExercices">
+            <!-- Sidebar - Liste des exercices -->
+            <aside class="sidebar">
+                <h2>Bibliothèque d'exercices</h2>
+                <div class="search-box">
+                    <input type="text" id="searchExercises" placeholder="Rechercher un exercice...">
+                </div>
+                <div class="exercise-list" id="exerciseList">
+                    <!-- Exercices chargés dynamiquement -->
+                </div>
+                <div class="ai-suggestion">
+                    <h3>💡 Modèles GLB</h3>
+                    <p id="aiSuggestion">Chargez 4 personnages différents (📁 Perso Mixamo) : chacun sera associé à un exercice.</p>
+                </div>
+            </aside>
+
+            <!-- Zone 3D + Webcam côte à côte -->
+            <section class="viewer-split">
+            <div class="viewer-3d">
+                <div class="viewer-header">
+                    <h2 id="exerciseTitle">Sélectionnez un exercice</h2>
+                    <div class="viewer-controls">
+                        <label class="model-upload">
+                            <input type="file" id="modelInput" accept=".glb,.gltf" multiple hidden>
+                            <span class="control-btn" title="Charger un ou plusieurs personnages Mixamo">📁 Mixamo</span>
+                        </label>
+                        <select id="persoModelSelect" class="model-select" title="Choisir le modèle affiché" style="display:none"></select>
+                        <button class="control-btn" id="playBtn" title="Jouer/Pause">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </button>
+                        <button class="control-btn" id="resetBtn" title="Réinitialiser">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                <path d="M3 3v5h5"/>
+                            </svg>
+                        </button>
+                        <button class="control-btn" id="speedBtn" title="Vitesse">1x</button>
+                    </div>
+                </div>
+                <div id="canvas-container"></div>
+                <div class="exercise-info">
+                    <h3>Instructions</h3>
+                    <p id="exerciseInstructions">Choisissez un exercice dans la liste pour voir les instructions et la démonstration 3D.</p>
+                    <div class="meta-info">
+                        <span id="exerciseDuration">Durée : --</span>
+                        <span id="exerciseDifficulty">Difficulté : --</span>
+                        <span id="exerciseZone">Zone : --</span>
+                    </div>
+                    <button class="done-btn" id="doneBtn" title="Marquer comme effectué">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Marquer comme effectué
+                    </button>
+                </div>
+            </div>
+            <!-- Webcam à droite, occupe tout l'espace flexible -->
+            <aside class="webcam-panel">
+                <h3>Votre posture</h3>
+                <div class="pose-viewer">
+                    <div class="pose-placeholder" id="posePlaceholder">
+                        <span class="pose-placeholder-icon">📷</span>
+                        <p>1. Sélectionnez un exercice et cliquez sur Play</p>
+                        <p>2. Puis activez la caméra ci-dessous</p>
+                    </div>
+                    <video id="poseVideo" playsinline></video>
+                    <canvas id="poseCanvas"></canvas>
+                    <div class="pose-feedback" id="poseFeedback"></div>
+                </div>
+                <button class="pose-toggle" id="poseToggle">Activer la caméra</button>
+            </aside>
+            </section>
+
+            </div>
+            <!-- Fin Vue Exercices -->
+
+            <!-- Vue Suivi -->
+            <section class="view-suivi" id="viewSuivi">
+                <div class="suivi-content">
+                    <h2>Suivi de rééducation</h2>
+                    <p class="suivi-desc">Suivez votre progression et vos séances d'exercices.</p>
+                    <div class="suivi-stats" id="suiviStats">
+                        <!-- Stats chargées dynamiquement -->
+                    </div>
+                    <div class="suivi-sections">
+                        <div class="suivi-section">
+                            <h3>Progression par exercice</h3>
+                            <div class="progress-list" id="progressList">
+                                <!-- Liste des exercices avec progression -->
+                            </div>
+                        </div>
+                        <div class="suivi-section">
+                            <h3>Historique des séances</h3>
+                            <div class="history-list" id="historyList">
+                                <!-- Historique chargé dynamiquement -->
+                            </div>
+                            <button class="clear-btn" id="clearHistoryBtn">Effacer l'historique</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Fin Vue Suivi -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Projet Kiné Rééducation — Pipeline IA/XR (IntAI03) — Version Web</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
