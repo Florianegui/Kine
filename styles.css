@@ -410,10 +410,28 @@ body {
     position: relative;
 }
 
+#mirrorVideo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    z-index: 0;
+}
+
 #canvas-container canvas {
+    position: relative;
+    z-index: 1;
     width: 100% !important;
     height: 100% !important;
     display: block;
+}
+
+#mirrorToggle.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow);
 }
 
 /* Bouton AR WebXR — dans la barre de contrôles (visible sur mobile) */

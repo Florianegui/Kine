@@ -73,6 +73,9 @@
                         <button class="control-btn" id="arPositionToggle" title="Ajuster la position en AR" aria-label="Position AR">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                         </button>
+                        <button class="control-btn" id="mirrorToggle" title="Mode miroir (caméra frontale)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+                        </button>
                     </div>
                 </div>
                 <div class="ar-position-panel" id="arPositionPanel" aria-hidden="true">
@@ -82,7 +85,9 @@
                     <label><span>Z</span><input type="range" id="arPosZ" min="-1.5" max="-0.3" step="0.1" value="-0.8"></label>
                     <label><span>Taille</span><input type="range" id="arScale" min="2" max="10" step="0.5" value="4"></label>
                 </div>
-                <div id="canvas-container"></div>
+                <div id="canvas-container">
+                    <video id="mirrorVideo" playsinline autoplay muted style="display:none"></video>
+                </div>
                 <div class="exercise-info">
                     <h3>Instructions</h3>
                     <p id="exerciseInstructions">Choisissez un exercice dans la liste pour voir les instructions et la démonstration 3D.</p>

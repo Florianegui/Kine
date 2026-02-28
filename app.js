@@ -362,13 +362,16 @@ function getARPosition() {
 }
 
 function applyARPosition(pos) {
-    if (!renderer?.xr?.isPresenting) return;  // Uniquement en AR
+    if (!renderer?.xr?.isPresenting && !mirrorModeActive) return;
     if (sceneContentGroup) {
         sceneContentGroup.position.set(pos.x, pos.y, pos.z);
         sceneContentGroup.scale.setScalar(pos.scale);
     }
-    if (arMarker) arMarker.position.set(pos.x, pos.y, pos.z);
+    if (arMarker && renderer?.xr?.isPresenting) arMarker.position.set(pos.x, pos.y, pos.z);
 }
+
+let mirrorModeActive = false;
+let mirrorStream = null;
 
 function initThree() {
     const container = document.getElementById('canvas-container');
@@ -449,6 +452,14 @@ function animate() {
 
     // Gestion entrée/sortie AR
     if (inAR && !wasInAR) {
+        if (mirrorModeActive) {
+            mirrorStream?.getTracks().forEach(t => t.stop());
+            mirrorStream = null;
+            document.getElementById('mirrorVideo').style.display = 'none';
+            document.getElementById('mirrorVideo').srcObject = null;
+            mirrorModeActive = false;
+            document.getElementById('mirrorToggle')?.classList.remove('active');
+        }
         scene.background = null;
         if (gridHelper) gridHelper.visible = false;
         const pos = getARPosition();
@@ -902,7 +913,54 @@ document.addEventListener('DOMContentLoaded', () => {
     ['arPosX', 'arPosY', 'arPosZ', 'arScale'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', () => {
-            if (renderer?.xr?.isPresenting) applyARPosition(getARPosition());
+            if (renderer?.xr?.isPresenting || mirrorModeActive) applyARPosition(getARPosition());
         });
     });
+
+    // Mode miroir (caméra frontale)
+    const mirrorToggle = document.getElementById('mirrorToggle');
+    const mirrorVideo = document.getElementById('mirrorVideo');
+    if (mirrorToggle && mirrorVideo) {
+        mirrorToggle.addEventListener('click', async () => {
+            if (mirrorModeActive) {
+                mirrorStream?.getTracks().forEach(t => t.stop());
+                mirrorStream = null;
+                mirrorVideo.srcObject = null;
+                mirrorVideo.style.display = 'none';
+                scene.background = new THREE.Color(0x0f1419);
+                if (gridHelper) gridHelper.visible = true;
+                if (sceneContentGroup) {
+                    sceneContentGroup.position.set(0, 0, 0);
+                    sceneContentGroup.scale.setScalar(1);
+                }
+                mirrorModeActive = false;
+                mirrorToggle.classList.remove('active');
+            } else {
+                try {
+                    mirrorStream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+                        audio: false
+                    });
+                    mirrorVideo.srcObject = mirrorStream;
+                    mirrorVideo.style.display = 'block';
+                    scene.background = null;
+                    if (gridHelper) gridHelper.visible = false;
+                    const pos = getARPosition();
+                    if (sceneContentGroup) {
+                        sceneContentGroup.position.set(pos.x, pos.y, pos.z);
+                        sceneContentGroup.scale.setScalar(pos.scale);
+                    }
+                    mirrorModeActive = true;
+                    mirrorToggle.classList.add('active');
+                    if (poseDetector?.isActive()) {
+                        poseDetector.stop();
+                        document.getElementById('poseToggle').textContent = 'Activer la caméra';
+                    }
+                } catch (err) {
+                    console.error('Mode miroir:', err);
+                    alert('Impossible d\'accéder à la caméra frontale. Vérifiez les autorisations.');
+                }
+            }
+        });
+    }
 });
